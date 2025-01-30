@@ -3,12 +3,12 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
 
 const ApiIntegration = () => {
   const codeSnippet = `//example
-await fetch('${process.env.NEXT_PUBLIC_BASE_URL}/api/shorter', {
+await fetch('${process.env.NEXT_PUBLIC_BASE_URL}/api/shorten', {
     method: 'POST',
     body: JSON.stringify({
         url: 'https://tracerly.net/',
         code: 'my-custom-code', // optional with maximum 16 characters
-        visible: false, // optional not show in recent urls
+        visible: false, // optional, for not show in recent urls
     }),
 })`
 

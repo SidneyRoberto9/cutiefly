@@ -19,10 +19,5 @@ export default async function Page({ params }: Props) {
     return <div>404 - URL not found</div>
   }
 
-  await db.url.update({
-    where: { shortCode: code },
-    data: { visits: url.visits + 1 },
-  })
-
   redirect(url.originalUrl)
 }

@@ -1,10 +1,11 @@
 "use client"
 
-import { CheckIcon, CopyIcon, EyeIcon } from "lucide-react"
+import { CheckIcon, CopyIcon } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { formatTimeAgo } from "@/lib/utils"
 import { Url } from "@prisma/client"
 
 const UrlList = () => {
@@ -85,7 +86,7 @@ const UrlList = () => {
     <div>
       <h2 className="mb-4 text-2xl font-bold">Recent URLs</h2>
       <ul className="min-h-[13.375rem] space-y-2">
-        {urls.map(({ id, shortCode, visits }) => (
+        {urls.map(({ id, shortCode, createdAt }) => (
           <li
             key={id}
             className="flex items-center justify-between gap-2 rounded-md border bg-card p-3 text-card-foreground"
@@ -97,7 +98,7 @@ const UrlList = () => {
             >
               {shortenerUrl(shortCode)}
             </Link>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="icon"
@@ -112,9 +113,8 @@ const UrlList = () => {
                 <span className="sr-only">Copy URL</span>
               </Button>
 
-              <span className="flex items-center gap-2 max-sm:hidden">
-                <EyeIcon className="size-4" />
-                {visits} views
+              <span className="text-sm font-normal max-sm:hidden">
+                {formatTimeAgo(createdAt)}
               </span>
             </div>
           </li>
