@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation"
 
+import NotFound from "@/components/not-found"
 import { db } from "@/lib/db"
 
 interface Props {
@@ -16,7 +17,7 @@ export default async function Page({ params }: Props) {
   })
 
   if (!url) {
-    return <div>404 - URL not found</div>
+    return <NotFound />
   }
 
   redirect(url.originalUrl)
