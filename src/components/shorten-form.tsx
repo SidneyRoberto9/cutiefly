@@ -1,18 +1,38 @@
 "use client"
 
+import { Loader2Icon } from "lucide-react"
 import { FormEvent, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-const ShortenForm = () => {
+interface ShortenFormProps {
+  handleUrlShortened: () => void
+}
+
+const ShortenForm = ({ handleUrlShortened }: ShortenFormProps) => {
   const [url, setUrl] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
 
-    console.log(url)
-    setUrl("")
+    try {
+      const response = await fetch("/api/shorten", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      })
+
+      await response.json()
+      setUrl("")
+      handleUrlShortened()
+    } catch (error) {
+      console.error("Error shortening URL:", error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -21,13 +41,17 @@ const ShortenForm = () => {
         <Input
           className="h-12"
           type="url"
-          placeholder="Ender URL to shorten"
+          placeholder="Enter URL to shorten"
           required
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
-        <Button className="w-full p-2" type="submit">
-          Shorten URL
+        <Button className="w-full p-2" type="submit" disabled={isLoading}>
+          {isLoading ? (
+            <Loader2Icon className="mr-2 animate-spin" />
+          ) : (
+            "Shorten"
+          )}
         </Button>
       </div>
     </form>
