@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+import { Metadata } from "next"
 
 export const SITE_CONFIG: Metadata = {
   title: {
@@ -10,15 +10,14 @@ export const SITE_CONFIG: Metadata = {
   icons: {
     icon: [
       {
-        url: "/icons/favicon.ico",
-        href: "/icons/favicon.ico",
+        url: "/icons/favicon.png",
+        href: "/icons/favicon.png",
       },
     ],
   },
   openGraph: {
-    title: "Astra - AI Powered Website Builder",
+    title: "Cutiefly - Shorten URLs",
     description:
       "Cutiefly is a smart URL shortener that makes your links shorter and more efficient in seconds. Fast, secure, and easy to use. Get started for free now! 🚀",
-   
   },
 }

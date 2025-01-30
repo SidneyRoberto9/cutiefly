@@ -49,7 +49,7 @@ const UrlList = () => {
     return (
       <div className="animate-pulse">
         <div className="mb-4 h-8 w-1/4 rounded bg-gray-200" />
-        <ul className="space-y-2">
+        <ul className="min-h-[13.375rem] space-y-2">
           {[...Array(3)].map((_, index) => (
             <li
               key={index}
@@ -57,7 +57,7 @@ const UrlList = () => {
             >
               <div className="h-4 w-1/2 rounded bg-gray-200" />
               <div className="flex items-center gap-3">
-                <div className="size-5 rounded bg-gray-200" />
+                <div className="size-6 rounded bg-gray-200" />
                 <span className="flex items-center gap-2">
                   <div className="size-4 rounded bg-gray-200" />
                   <div className="h-4 w-10 rounded bg-gray-200" />
@@ -70,10 +70,21 @@ const UrlList = () => {
     )
   }
 
+  if (urls.length === 0) {
+    return (
+      <div>
+        <h2 className="mb-4 text-2xl font-bold">Recent URLs</h2>
+        <p className="min-h-[13.375rem] text-muted-foreground">
+          No URLs found.
+        </p>
+      </div>
+    )
+  }
+
   return (
     <div>
-      <h2 className="mb-2 text-2xl font-bold">Recent URLs</h2>
-      <ul className="space-y-2">
+      <h2 className="mb-4 text-2xl font-bold">Recent URLs</h2>
+      <ul className="min-h-[13.375rem] space-y-2">
         {urls.map(({ id, shortCode, visits }) => (
           <li
             key={id}
@@ -81,7 +92,7 @@ const UrlList = () => {
           >
             <Link
               href={`/${shortCode}`}
-              className="text-blue-500"
+              className="truncate text-blue-500"
               target="_blank"
             >
               {shortenerUrl(shortCode)}
@@ -101,7 +112,7 @@ const UrlList = () => {
                 <span className="sr-only">Copy URL</span>
               </Button>
 
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2 max-sm:hidden">
                 <EyeIcon className="size-4" />
                 {visits} views
               </span>

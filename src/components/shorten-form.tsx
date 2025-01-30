@@ -53,6 +53,9 @@ const ShortenForm = ({ handleUrlShortened }: ShortenFormProps) => {
             "Shorten"
           )}
         </Button>
+        <span className="text-xs font-light">
+          *Shortened links expire after 7 days. Be sure to save them in time!
+        </span>
       </div>
     </form>
   )
