@@ -30,12 +30,14 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  let isPrivate = !visible
+
+  if (visible == null || visible == undefined) {
+    isPrivate = false
+  }
+
   const shortenedUrl = await db.url.create({
-    data: {
-      originalUrl: url,
-      shortCode,
-      isPrivate: !!!visible,
-    },
+    data: { originalUrl: url, shortCode, isPrivate },
   })
 
   return NextResponse.json({
