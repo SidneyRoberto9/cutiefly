@@ -99,6 +99,10 @@ const UrlList = () => {
               {shortenerUrl(shortCode)}
             </Link>
             <div className="flex items-center gap-2">
+              <span className="w-13 truncate text-sm font-normal max-sm:hidden">
+                {formatTimeAgo(createdAt)}
+              </span>
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -112,10 +116,6 @@ const UrlList = () => {
                 )}
                 <span className="sr-only">Copy URL</span>
               </Button>
-
-              <span className="text-sm font-normal max-sm:hidden">
-                {formatTimeAgo(createdAt)}
-              </span>
             </div>
           </li>
         ))}
