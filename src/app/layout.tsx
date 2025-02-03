@@ -1,24 +1,30 @@
-import '@/styles/globals.css';
+import "@/styles/globals.css"
 
-import { Inter } from 'next/font/google';
-import { PropsWithChildren } from 'react';
+import { Inter } from "next/font/google"
+import { PropsWithChildren } from "react"
 
-import { SITE_CONFIG } from '@/config';
-import { cn } from '@/lib/utils';
+import { SITE_CONFIG } from "@/config"
+import { cn } from "@/lib/utils"
 
 const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-});
+  variable: "--font-inter",
+  subsets: ["latin"],
+})
 
 export const metadata = SITE_CONFIG
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
-      <body className={cn('bg-background text-foreground antialiased', inter.className)}>
+      <script src="https://tracerly.net/api/tracking/cm6ofgoon0000852a8sb21etj"></script>
+      <body
+        className={cn(
+          "bg-background text-foreground antialiased",
+          inter.className
+        )}
+      >
         {children}
       </body>
     </html>
-  );
+  )
 }
