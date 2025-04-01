@@ -27,10 +27,14 @@ const NotFound = () => {
             </h1>
           </div>
 
-          <Alert variant="destructive" className="border-red-500 bg-red-900">
+          <Alert
+            variant="destructive"
+            className="border-red-500 bg-red-900"
+            data-testid="not-found-alert"
+          >
             <AlertTriangle className="h-6 w-6" />
             <AlertTitle className="text-2xl font-bold">
-              {getRandomMessage()}
+              Page Not Found: {getRandomMessage()}
             </AlertTitle>
             <AlertDescription className="mt-2 text-lg">
               The page you're looking for has been completely annihilated.

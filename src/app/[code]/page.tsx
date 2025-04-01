@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 
 import NotFound from "@/components/not-found"
-import { db } from "@/lib/db"
+import { getUrlByCode } from "@/lib/functions/get-url-by-code"
 
 interface Props {
   params: Promise<{
@@ -12,9 +12,7 @@ interface Props {
 export default async function Page({ params }: Props) {
   const { code } = await params
 
-  const url = await db.url.findUnique({
-    where: { shortCode: code },
-  })
+  const url = await getUrlByCode(code)
 
   if (!url) {
     return <NotFound />
