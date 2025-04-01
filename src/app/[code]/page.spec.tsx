@@ -13,34 +13,31 @@ vi.mock("@/lib/functions/get-url-by-code", () => ({
   getUrlByCode: vi.fn(),
 }))
 
-describe("Page", () => {
+describe("Page [code]", () => {
+  const mockedGet = getUrlByCode as unknown as ReturnType<typeof vi.fn>
+
   beforeEach(() => {
-    vi.resetAllMocks()
+    vi.clearAllMocks()
   })
 
-  const mockedGetUrlByCode = getUrlByCode as ReturnType<typeof vi.fn>
-
-  it("redireciona se o código for válido", async () => {
-    mockedGetUrlByCode.mockResolvedValueOnce({
+  it("redireciona se encontrar URL correspondente", async () => {
+    mockedGet.mockResolvedValueOnce({
       id: "1",
       isPrivate: false,
       shortCode: "Uakgb_J5m9g-0JDM",
       createdAt: new Date(),
-      originalUrl: "https://google.com",
+      originalUrl: "https://example.com",
     })
 
     await Page({ params: Promise.resolve({ code: "Uakgb_J5m9g-0JDM" }) })
 
-    expect(redirect).toHaveBeenCalledWith("https://google.com")
+    expect(redirect).toHaveBeenCalledWith("https://example.com")
   })
 
-  it("renderiza NotFound se o código for inválido", async () => {
-    mockedGetUrlByCode.mockResolvedValueOnce(null)
+  it("renderiza NotFound se código não for encontrado", async () => {
+    mockedGet.mockResolvedValueOnce(null)
 
-    const result = await Page({
-      params: Promise.resolve({ code: "Uakgb_J5m9g-0JDK" }),
-    })
-
+    const result = await Page({ params: Promise.resolve({ code: "notfound" }) })
     render(result as JSX.Element)
 
     expect(screen.getByTestId("not-found-alert")).toBeInTheDocument()

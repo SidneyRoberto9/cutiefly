@@ -1,7 +1,8 @@
 import { nanoid } from "nanoid"
 import { NextRequest, NextResponse } from "next/server"
 
-import { db } from "@/lib/db"
+import { createUrl } from "@/lib/functions/create-url"
+import { getUrlByCode } from "@/lib/functions/get-url-by-code"
 
 export async function POST(request: NextRequest) {
   const { url, code, visible } = await request.json()
@@ -19,9 +20,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const existingUrl = await db.url.findUnique({
-    where: { shortCode },
-  })
+  const existingUrl = await getUrlByCode(shortCode)
 
   if (existingUrl) {
     return NextResponse.json(
@@ -36,8 +35,10 @@ export async function POST(request: NextRequest) {
     isPrivate = false
   }
 
-  const shortenedUrl = await db.url.create({
-    data: { originalUrl: url, shortCode, isPrivate },
+  const shortenedUrl = await createUrl({
+    url,
+    shortCode,
+    isPrivate,
   })
 
   return NextResponse.json({

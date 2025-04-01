@@ -1,14 +1,10 @@
 import { NextResponse } from "next/server"
 
-import { db } from "@/lib/db"
+import { take3Urls } from "@/lib/functions/take-3-url"
 
 export async function GET() {
   try {
-    const urls = await db.url.findMany({
-      where: { isPrivate: false },
-      orderBy: { createdAt: "desc" },
-      take: 3,
-    })
+    const urls = await take3Urls()
 
     return NextResponse.json(urls)
   } catch (error) {

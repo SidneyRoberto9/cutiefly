@@ -7,12 +7,18 @@ vi.mock("next/font/google", () => ({
 
 describe("Default Layout", () => {
   it("renders children correctly", () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {})
+
     render(
       <RootLayout>
-        <div data-testid="child">Teste</div>
+        <span data-testid="child">Teste</span>
       </RootLayout>
     )
 
     expect(screen.getByTestId("child")).toBeInTheDocument()
+
+    consoleErrorSpy.mockRestore()
   })
 })
