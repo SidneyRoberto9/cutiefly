@@ -1,14 +1,9 @@
-import { subDays } from "date-fns"
 import { NextResponse } from "next/server"
 
-import { db } from "@/lib/db"
+import { deleteLast7DaysUrls } from "@/lib/functions/delete-last-7-days-urls"
 
 export async function GET() {
-  const sevenDaysAgo = subDays(new Date(), 7)
-
-  await db.url.deleteMany({
-    where: { createdAt: { lte: sevenDaysAgo } },
-  })
+  await deleteLast7DaysUrls()
 
   return NextResponse.json({ success: true })
 }
