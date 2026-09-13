@@ -13,10 +13,12 @@ interface ShortenFormProps {
 const ShortenForm = ({ handleUrlShortened }: ShortenFormProps) => {
   const [url, setUrl] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string>("")
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError("")
 
     try {
       const response = await fetch("/api/shorten", {
@@ -25,11 +27,18 @@ const ShortenForm = ({ handleUrlShortened }: ShortenFormProps) => {
         body: JSON.stringify({ url }),
       })
 
-      await response.json()
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error ?? "Could not shorten this URL")
+        return
+      }
+
       setUrl("")
       handleUrlShortened()
-    } catch (error) {
-      console.error("Error shortening URL:", error)
+    } catch (err) {
+      console.error("Error shortening URL:", err)
+      setError("Could not shorten this URL")
     } finally {
       setIsLoading(false)
     }
@@ -53,6 +62,11 @@ const ShortenForm = ({ handleUrlShortened }: ShortenFormProps) => {
             "Shorten"
           )}
         </Button>
+        {error && (
+          <span role="alert" className="text-xs text-red-500">
+            {error}
+          </span>
+        )}
         <span className="text-xs font-light">
           *Shortened links expire after 7 days. Be sure to save them in time!
         </span>

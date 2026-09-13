@@ -9,6 +9,7 @@ describe("ShortenForm", () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
+        ok: true,
         json: async () => ({}),
       })
     )
@@ -33,6 +34,7 @@ describe("ShortenForm", () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
+        ok: true,
         json: () => Promise.resolve({}),
       })
     )
@@ -46,5 +48,31 @@ describe("ShortenForm", () => {
     fireEvent.click(button)
 
     await waitFor(() => expect(button).toBeDisabled())
+  })
+
+  it("mostra a mensagem de erro retornada pela API", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: false,
+        json: async () => ({
+          error: "Too many requests, try again in a minute",
+        }),
+      })
+    )
+
+    render(<ShortenForm handleUrlShortened={mockHandler} />)
+
+    fireEvent.change(screen.getByPlaceholderText(/enter url/i), {
+      target: { value: "https://example.com" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: /shorten/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Too many requests, try again in a minute"
+      )
+    })
+    expect(mockHandler).not.toHaveBeenCalled()
   })
 })
