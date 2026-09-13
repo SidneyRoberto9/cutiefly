@@ -3,11 +3,19 @@ import { NextRequest, NextResponse } from "next/server"
 
 import { createUrl } from "@/lib/functions/create-url"
 import { getUrlByCode } from "@/lib/functions/get-url-by-code"
+import { getClientIp, isRateLimited } from "@/lib/rate-limit"
 import { isSafeUrl } from "@/lib/validate-url"
 
 const CODE_PATTERN = /^[A-Za-z0-9_-]+$/
 
 export async function POST(request: NextRequest) {
+  if (isRateLimited(getClientIp(request))) {
+    return NextResponse.json(
+      { error: "Too many requests, try again in a minute" },
+      { status: 429 }
+    )
+  }
+
   const { url, code, visible } = await request.json()
 
   if (!isSafeUrl(url)) {

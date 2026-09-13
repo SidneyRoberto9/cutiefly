@@ -1,6 +1,7 @@
 import { createNextRequest } from "@/lib/__tests__/craete-next-request"
 import { createUrl } from "@/lib/functions/create-url"
 import { getUrlByCode } from "@/lib/functions/get-url-by-code"
+import { RATE_LIMIT, resetRateLimit } from "@/lib/rate-limit"
 
 import { POST } from "./route"
 
@@ -19,6 +20,7 @@ vi.mock("nanoid", () => ({
 describe("POST /api", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    resetRateLimit()
     process.env.NEXT_PUBLIC_BASE_URL = "http://localhost"
   })
 
@@ -157,5 +159,21 @@ describe("POST /api", () => {
       "Invalid code, use letters, numbers, hyphen or underscore"
     )
     expect(mockedCreateUrl).not.toHaveBeenCalled()
+  })
+
+  it("retorna 429 após estourar o limite de requisições", async () => {
+    mockedGetUrlByCode.mockResolvedValue(null)
+    mockedCreateUrl.mockResolvedValue({ shortCode: "1234567890123456" })
+
+    for (let i = 0; i < RATE_LIMIT.MAX_REQUESTS; i++) {
+      const ok = await POST(createNextRequest({ url: "https://example.com" }))
+      expect(ok.status).toBe(200)
+    }
+
+    const res = await POST(createNextRequest({ url: "https://example.com" }))
+    const body = await res.json()
+
+    expect(res.status).toBe(429)
+    expect(body.error).toBe("Too many requests, try again in a minute")
   })
 })
