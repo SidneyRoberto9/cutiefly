@@ -126,4 +126,36 @@ describe("POST /api", () => {
       isPrivate: false,
     })
   })
+
+  it("rejeita url com protocolo não permitido", async () => {
+    const req = createNextRequest({ url: "javascript:alert(1)" })
+    const res = await POST(req)
+    const body = await res.json()
+
+    expect(res.status).toBe(400)
+    expect(body.error).toBe("Invalid url, only http and https are allowed")
+    expect(mockedCreateUrl).not.toHaveBeenCalled()
+  })
+
+  it("rejeita url ausente ou inválida", async () => {
+    const res = await POST(createNextRequest({ url: "not-a-url" }))
+
+    expect(res.status).toBe(400)
+    expect(mockedCreateUrl).not.toHaveBeenCalled()
+  })
+
+  it("rejeita código com caracteres inválidos", async () => {
+    const req = createNextRequest({
+      url: "https://example.com",
+      code: "../etc",
+    })
+    const res = await POST(req)
+    const body = await res.json()
+
+    expect(res.status).toBe(400)
+    expect(body.error).toBe(
+      "Invalid code, use letters, numbers, hyphen or underscore"
+    )
+    expect(mockedCreateUrl).not.toHaveBeenCalled()
+  })
 })

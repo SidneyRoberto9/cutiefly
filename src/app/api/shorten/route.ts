@@ -3,9 +3,19 @@ import { NextRequest, NextResponse } from "next/server"
 
 import { createUrl } from "@/lib/functions/create-url"
 import { getUrlByCode } from "@/lib/functions/get-url-by-code"
+import { isSafeUrl } from "@/lib/validate-url"
+
+const CODE_PATTERN = /^[A-Za-z0-9_-]+$/
 
 export async function POST(request: NextRequest) {
   const { url, code, visible } = await request.json()
+
+  if (!isSafeUrl(url)) {
+    return NextResponse.json(
+      { error: "Invalid url, only http and https are allowed" },
+      { status: 400 }
+    )
+  }
 
   let shortCode = nanoid(16)
 
@@ -15,9 +25,16 @@ export async function POST(request: NextRequest) {
         { error: "Code too long, maximum 16 characters" },
         { status: 400 }
       )
-    } else {
-      shortCode = code
     }
+
+    if (typeof code !== "string" || !CODE_PATTERN.test(code)) {
+      return NextResponse.json(
+        { error: "Invalid code, use letters, numbers, hyphen or underscore" },
+        { status: 400 }
+      )
+    }
+
+    shortCode = code
   }
 
   const existingUrl = await getUrlByCode(shortCode)
